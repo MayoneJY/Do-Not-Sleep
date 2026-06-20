@@ -1,0 +1,12 @@
+.DS_Store
+/.build
+/Do Not Sleep.app/
+/dist/
+/Scripts/release.local.sh
+/.release.local.env
+/Packages
+xcuserdata/
+DerivedData/
+.swiftpm/configuration/registries.json
+.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+.netrc
