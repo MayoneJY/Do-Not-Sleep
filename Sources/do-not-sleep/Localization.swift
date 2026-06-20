@@ -46,6 +46,21 @@ enum L10n {
         case launchAtLogin
         case launchAtLoginSaveFailed
         case launchAtLoginRequiresAppBundle
+        case checkForUpdates
+        case updateAlreadyRunningTitle
+        case updateAlreadyRunningMessage
+        case updateRequiresAppBundle
+        case updateAvailableTitle
+        case updateAvailableMessage
+        case updateNotAvailableTitle
+        case updateNotAvailableMessage
+        case updateNoInstallableAsset
+        case downloadAndInstallUpdate
+        case openReleasesPage
+        case updateFailedTitle
+        case updateNetworkFailed
+        case cancel
+        case ok
         case installHelper
         case uninstallHelper
         case refreshStatus

@@ -11,6 +11,7 @@ final class MenuBarAppController: NSObject, NSApplicationDelegate {
     private let logger: Logger
     private let assertionController: PowerAssertionController
     private let lidClosedKeepAwakeController: LidClosedKeepAwakeController
+    private let updateChecker = UpdateChecker()
     private let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
     private var hookServer: HookHTTPServer?
     private var timer: Timer?
@@ -124,6 +125,10 @@ final class MenuBarAppController: NSObject, NSApplicationDelegate {
 
     @objc private func refreshMenu() {
         refresh()
+    }
+
+    @objc private func checkForUpdates() {
+        updateChecker.checkForUpdates()
     }
 
     @objc private func removeHookSession(_ sender: NSMenuItem) {
@@ -293,6 +298,10 @@ final class MenuBarAppController: NSObject, NSApplicationDelegate {
         }
 
         menu.addItem(NSMenuItem.separator())
+
+        let updateItem = NSMenuItem(title: L10n.text(.checkForUpdates), action: #selector(checkForUpdates), keyEquivalent: "")
+        updateItem.target = self
+        menu.addItem(updateItem)
 
         let refreshItem = NSMenuItem(title: L10n.text(.refreshStatus), action: #selector(refreshMenu), keyEquivalent: "r")
         refreshItem.target = self
