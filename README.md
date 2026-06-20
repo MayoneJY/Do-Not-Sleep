@@ -2,10 +2,10 @@
 
 # Do Not Sleep
 
-<!-- If the GitHub repository path changes, update MayoneJY/do-not-sleep in the badge URLs below. -->
+<!-- If the GitHub repository path changes, update MayoneJY/Do-Not-Sleep in the badge URLs below. -->
 <p align="center">
   <a href="Scripts/build-app.sh"><img alt="Version" src="https://img.shields.io/badge/version-0.1.0-2f81f7?style=flat-square"></a>
-  <a href="https://github.com/MayoneJY/do-not-sleep/releases"><img alt="Downloads" src="https://img.shields.io/github/downloads/MayoneJY/do-not-sleep/total?label=downloads&style=flat-square&color=2ea043"></a>
+  <a href="https://github.com/MayoneJY/Do-Not-Sleep/releases"><img alt="Downloads" src="https://img.shields.io/github/downloads/MayoneJY/Do-Not-Sleep/total?label=downloads&style=flat-square&color=2ea043"></a>
   <a href="Scripts/build-app.sh"><img alt="macOS" src="https://img.shields.io/badge/macOS-13%2B-111111?style=flat-square&logo=apple&logoColor=white"></a>
   <a href="Package.swift"><img alt="Swift" src="https://img.shields.io/badge/Swift-6.2-f05138?style=flat-square&logo=swift&logoColor=white"></a>
   <a href="Sources/do-not-sleep/Resources"><img alt="Languages" src="https://img.shields.io/badge/languages-EN%20%7C%20KO-8a63d2?style=flat-square"></a>
@@ -80,6 +80,7 @@ The menu is intentionally small:
 - Administrator permission status
 - Manual keep-awake toggle
 - Open at Login toggle
+- Check for Updates
 - Hook session count and cleanup actions
 - Apply/refresh administrator permission
 - Remove administrator permission, shown only when the helper is available
@@ -293,6 +294,25 @@ xcrun notarytool store-credentials "do-not-sleep-notary" \
 ```
 
 Release output should be written to `dist/`. Keep local release automation out of git, for example `Scripts/release.local.sh` and `.release.local.env`. Do not commit `dist/`, Apple ID passwords, API keys, notarization profiles, or exported certificates.
+
+## Updates
+
+`Check for Updates...` uses the latest GitHub Release:
+
+```text
+https://github.com/MayoneJY/Do-Not-Sleep/releases
+```
+
+When a newer tag exists, the app selects an installable `.zip` or `.dmg` release asset, downloads it, quits the current app, replaces `Do Not Sleep.app`, and relaunches it.
+
+Release asset requirements:
+
+- The release tag should be higher than `CFBundleShortVersionString`, for example `v0.1.1`.
+- The release must contain a `.zip` or `.dmg` asset.
+- The package must contain `Do Not Sleep.app`.
+- The current app location must be writable by the user. If the app is installed somewhere that requires administrator approval, move it to a user-writable location or install a signed release through the normal macOS flow.
+
+Developer ID signing and notarization are still required for public distribution, but the updater code path can be built and tested before Apple Developer Program enrollment.
 
 ## Common Failure Modes
 

@@ -2,10 +2,10 @@
 
 # Do Not Sleep
 
-<!-- GitHub 저장소 경로가 바뀌면 아래 badge URL의 MayoneJY/do-not-sleep만 바꾸면 됩니다. -->
+<!-- GitHub 저장소 경로가 바뀌면 아래 badge URL의 MayoneJY/Do-Not-Sleep만 바꾸면 됩니다. -->
 <p align="center">
   <a href="Scripts/build-app.sh"><img alt="Version" src="https://img.shields.io/badge/version-0.1.0-2f81f7?style=flat-square"></a>
-  <a href="https://github.com/MayoneJY/do-not-sleep/releases"><img alt="Downloads" src="https://img.shields.io/github/downloads/MayoneJY/do-not-sleep/total?label=downloads&style=flat-square&color=2ea043"></a>
+  <a href="https://github.com/MayoneJY/Do-Not-Sleep/releases"><img alt="Downloads" src="https://img.shields.io/github/downloads/MayoneJY/Do-Not-Sleep/total?label=downloads&style=flat-square&color=2ea043"></a>
   <a href="Scripts/build-app.sh"><img alt="macOS" src="https://img.shields.io/badge/macOS-13%2B-111111?style=flat-square&logo=apple&logoColor=white"></a>
   <a href="Package.swift"><img alt="Swift" src="https://img.shields.io/badge/Swift-6.2-f05138?style=flat-square&logo=swift&logoColor=white"></a>
   <a href="Sources/do-not-sleep/Resources"><img alt="Languages" src="https://img.shields.io/badge/languages-EN%20%7C%20KO-8a63d2?style=flat-square"></a>
@@ -80,6 +80,7 @@ Do Not Sleep.app/Contents/MacOS/DoNotSleep
 - 관리자 권한 상태
 - 잠자기 방지 수동 유지 토글
 - 로그인 시 자동 실행 토글
+- 업데이트 확인
 - 훅 세션 개수와 정리 메뉴
 - 관리자 권한 적용/갱신
 - 관리자 권한 제거, helper가 있을 때만 표시
@@ -293,6 +294,25 @@ xcrun notarytool store-credentials "do-not-sleep-notary" \
 ```
 
 배포 산출물은 `dist/`에 만들면 됩니다. 로컬 배포 자동화는 `Scripts/release.local.sh`, `.release.local.env`처럼 깃에 올리지 않는 파일로 관리하세요. `dist/`, Apple ID 비밀번호, API key, notarization profile, export한 인증서는 커밋하지 마세요.
+
+## 업데이트
+
+`업데이트 확인...`은 아래 GitHub Release의 최신 버전을 확인합니다.
+
+```text
+https://github.com/MayoneJY/Do-Not-Sleep/releases
+```
+
+더 높은 tag가 있으면 설치 가능한 `.zip` 또는 `.dmg` release asset을 고르고, 파일을 내려받은 뒤 현재 앱을 종료하고 `Do Not Sleep.app`을 교체한 다음 다시 실행합니다.
+
+Release asset 조건:
+
+- release tag는 `CFBundleShortVersionString`보다 높아야 합니다. 예: `v0.1.1`
+- release에는 `.zip` 또는 `.dmg` asset이 있어야 합니다.
+- 패키지 안에는 `Do Not Sleep.app`이 들어 있어야 합니다.
+- 현재 앱 위치에 사용자가 쓸 수 있어야 합니다. 관리자 승인이 필요한 위치에 설치되어 있으면 사용자 쓰기 가능한 위치로 옮기거나, 서명된 release를 macOS 일반 설치 흐름으로 설치하세요.
+
+공개 배포에는 여전히 Developer ID 서명과 공증이 필요하지만, Apple Developer Program 가입 전에도 updater 코드 경로는 빌드하고 테스트할 수 있습니다.
 
 ## 자주 생기는 문제
 
