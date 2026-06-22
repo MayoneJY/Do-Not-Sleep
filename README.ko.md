@@ -123,7 +123,9 @@ http://127.0.0.1:17643/event
 
 기존 파일은 쓰기 전에 `.before-do-not-sleep-YYYYMMDDHHMMSS` 접미사로 백업합니다.
 
-Codex는 새 command hook을 직접 신뢰 처리해야 실행합니다. 훅 설치 후 앱이 안내 창을 띄웁니다. 안내 창의 Codex 버튼은 `/hooks`를 클립보드에 복사하고 Codex 앱을 엽니다. Codex에서 `/hooks`를 붙여넣거나 입력한 뒤 `Do Not Sleep 훅 등록 세션 동기화` command hook을 신뢰 처리하세요.
+Codex는 새 command hook을 직접 신뢰 처리해야 실행합니다. 훅 설치 후 앱이 안내 창을 띄웁니다. Codex 앱은 현재 훅 화면으로 바로 이동하는 공개 URL을 제공하지 않으므로, 안내 창의 Codex 버튼은 `/hooks`를 클립보드에 복사하고 Codex 앱을 엽니다. Codex에서 `/hooks`를 붙여넣거나 입력한 뒤 `Do Not Sleep 훅 등록 세션 동기화` command hook을 신뢰 처리하세요.
+
+macOS가 “Do Not Sleep.app이 앱을 수정하려는 시도를 차단했습니다”라고 표시하면 `시스템 설정 > 개인정보 보호 및 보안 > 앱 관리`에서 Do Not Sleep을 허용한 뒤 다시 시도하세요. 앱의 실패 안내 창에서 `앱 관리 설정 열기`를 누르면 해당 설정으로 이동합니다.
 
 처리하는 이벤트:
 
@@ -314,6 +316,7 @@ Release asset 조건:
 - 메뉴 아이콘이 안 보임: macOS 메뉴 막대 오른쪽과 Hidden Bar/Bartender 같은 메뉴 막대 정리 앱을 확인하세요.
 - 훅 수신기가 안 뜸: 메뉴 막대 앱을 실행하고 메뉴에 `http://127.0.0.1:17643/event`가 보이는지 확인하세요.
 - Codex 훅이 실행되지 않음: Codex에서 `/hooks`를 열고 설치된 command hook을 신뢰 처리하세요.
+- macOS가 앱 수정 시도를 차단함: `개인정보 보호 및 보안 > 앱 관리`에서 Do Not Sleep을 허용한 뒤 `관리자 권한 적용/갱신`을 다시 실행하세요.
 - 작업을 멈췄는데 세션이 남음: Stop 훅이 전달되지 않았을 수 있습니다. transcript 정보가 있고 파일 변경이 멈췄다면 기본 자동 정리가 약 10분 뒤 제거합니다. 아니면 훅 세션 정리 메뉴에서 직접 제거하세요.
 - 덮개 닫힘 강제 방지에 관리자 권한이 필요하다고 나옴: 메뉴에서 권한을 적용하거나 `./Scripts/install-helper.sh`를 실행하세요.
 - 크래시 뒤 `SleepDisabled`가 켜진 채 남음: `sudo pmset -a disablesleep 0`을 실행하세요.

@@ -376,8 +376,21 @@ final class MenuBarAppController: NSObject, NSApplicationDelegate, @unchecked Se
         setupStatusMessage = nil
         if let errorMessage {
             recordError(errorMessage)
+            showSetupFailureGuide(errorMessage: errorMessage)
         } else {
             refresh()
+        }
+    }
+
+    private func showSetupFailureGuide(errorMessage: String) {
+        let alert = NSAlert()
+        alert.messageText = L10n.text(.setupFailureGuideTitle)
+        alert.informativeText = L10n.format(.setupFailureGuideMessage, errorMessage)
+        alert.addButton(withTitle: L10n.text(.openAppManagementSettings))
+        alert.addButton(withTitle: L10n.text(.ok))
+
+        if alert.runModal() == .alertFirstButtonReturn {
+            openAppManagementSettings()
         }
     }
 
@@ -394,6 +407,22 @@ final class MenuBarAppController: NSObject, NSApplicationDelegate, @unchecked Se
         }
     }
 
+    private func openAppManagementSettings() {
+        let urls = [
+            "x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension?Privacy_AppBundles",
+            "x-apple.systempreferences:com.apple.preference.security?Privacy_AppBundles",
+        ]
+
+        for value in urls {
+            guard let url = URL(string: value) else {
+                continue
+            }
+            if NSWorkspace.shared.open(url) {
+                return
+            }
+        }
+    }
+
     private func copyHooksCommandToPasteboard() {
         let pasteboard = NSPasteboard.general
         pasteboard.clearContents()
@@ -401,6 +430,10 @@ final class MenuBarAppController: NSObject, NSApplicationDelegate, @unchecked Se
     }
 
     private func openCodexApp() {
+        if let launchURL = URL(string: "codex://launch"), NSWorkspace.shared.open(launchURL) {
+            return
+        }
+
         let appURL = URL(fileURLWithPath: "/Applications/Codex.app")
         if FileManager.default.fileExists(atPath: appURL.path) {
             NSWorkspace.shared.open(appURL)

@@ -99,8 +99,11 @@
 "installHooksSuccess" = "Installed Codex/Claude hooks.";
 "setupApplyingPermissions" = "Setting up... applying administrator permission and hooks";
 "setupFailed" = "Initial setup failed: %@";
+"setupFailureGuideTitle" = "Initial setup could not finish";
+"setupFailureGuideMessage" = "macOS may have blocked App Management permission. Open System Settings > Privacy & Security > App Management, allow Do Not Sleep, then try again.\n\nError: %@";
+"openAppManagementSettings" = "Open App Management Settings";
 "hookTrustGuideTitle" = "Codex hook trust is required";
-"hookTrustGuideMessage" = "Codex requires explicit trust before a new command hook can run. Open /hooks in Codex and trust the 'Do Not Sleep 훅 등록 세션 동기화' command hook. This button copies /hooks to the clipboard and opens Codex.";
+"hookTrustGuideMessage" = "Codex requires explicit trust before a new command hook can run. Codex currently does not expose a public URL that opens the hook screen directly, so this button copies /hooks to the clipboard and opens Codex. Paste or type /hooks in Codex, then trust the 'Do Not Sleep 훅 등록 세션 동기화' command hook.";
 "openCodexAndCopyHooksCommand" = "Open Codex and Copy /hooks";
 "uninstallHelperSuccess" = "Removed administrator permission.";
 "refreshFailed" = "Failed to refresh status: %@";

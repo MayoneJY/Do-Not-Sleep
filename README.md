@@ -123,7 +123,9 @@ The app updates:
 
 Existing files are backed up with a `.before-do-not-sleep-YYYYMMDDHHMMSS` suffix before changes are written.
 
-Codex requires manual trust for new command hooks. After installing hooks, the app shows a guide dialog. Its Codex button copies `/hooks` to the clipboard and opens Codex; paste or type `/hooks`, then trust the `Do Not Sleep 훅 등록 세션 동기화` command hook.
+Codex requires manual trust for new command hooks. After installing hooks, the app shows a guide dialog. Codex currently does not expose a public URL that opens the hook screen directly, so the dialog's Codex button copies `/hooks` to the clipboard and opens Codex; paste or type `/hooks`, then trust the `Do Not Sleep 훅 등록 세션 동기화` command hook.
+
+If macOS says “Do Not Sleep.app was blocked from modifying apps,” open `System Settings > Privacy & Security > App Management`, allow Do Not Sleep, then try again. The setup failure dialog includes an `Open App Management Settings` button for this.
 
 Handled events:
 
@@ -314,6 +316,7 @@ Developer ID signing and notarization are still required for public distribution
 - Menu icon is not visible: check the right side of the macOS menu bar and menu bar organizers such as Hidden Bar or Bartender.
 - Hook receiver is unavailable: start the menu bar app and confirm the menu shows `http://127.0.0.1:17643/event`.
 - Codex hooks do not run: open `/hooks` in Codex and trust the installed command hook.
+- macOS blocks app modification: allow Do Not Sleep in `Privacy & Security > App Management`, then run `Apply/refresh administrator permission` again.
 - A session remains after stopping work: the stop hook may not have been delivered. If the session has transcript metadata and the transcript stops changing, default stale cleanup should remove it after about 10 minutes. Otherwise remove it from the hook session cleanup menu.
 - Lid-closed forced keep-awake says administrator permission is required: apply permission from the menu or run `./Scripts/install-helper.sh`.
 - `SleepDisabled` remains enabled after a crash: run `sudo pmset -a disablesleep 0`.

@@ -99,8 +99,11 @@
 "installHooksSuccess" = "Codex/Claude 훅 등록을 완료했습니다.";
 "setupApplyingPermissions" = "설정 중... 관리자 권한 및 훅 적용";
 "setupFailed" = "초기 설정 실패: %@";
+"setupFailureGuideTitle" = "초기 설정을 완료하지 못했습니다";
+"setupFailureGuideMessage" = "macOS가 앱 관리 권한을 차단했을 수 있습니다. 시스템 설정 > 개인정보 보호 및 보안 > 앱 관리에서 Do Not Sleep을 허용한 뒤 다시 시도하세요.\n\n오류: %@";
+"openAppManagementSettings" = "앱 관리 설정 열기";
 "hookTrustGuideTitle" = "Codex 훅 신뢰가 필요합니다";
-"hookTrustGuideMessage" = "Codex는 새 command hook을 직접 신뢰 처리해야 실행합니다. Codex에서 /hooks를 열고 'Do Not Sleep 훅 등록 세션 동기화' 항목을 신뢰 처리하세요. 버튼을 누르면 /hooks 명령을 클립보드에 복사하고 Codex 앱을 엽니다.";
+"hookTrustGuideMessage" = "Codex는 새 command hook을 직접 신뢰 처리해야 실행합니다. Codex 앱은 현재 훅 화면으로 바로 이동하는 공개 URL을 제공하지 않으므로, 버튼을 누르면 /hooks 명령을 클립보드에 복사하고 Codex를 엽니다. Codex 입력창에 /hooks를 붙여넣거나 입력한 뒤 'Do Not Sleep 훅 등록 세션 동기화' 항목을 신뢰 처리하세요.";
 "openCodexAndCopyHooksCommand" = "Codex 열기 및 /hooks 복사";
 "uninstallHelperSuccess" = "관리자 권한 제거를 완료했습니다.";
 "refreshFailed" = "상태 새로고침 실패: %@";

@@ -101,6 +101,9 @@ enum L10n {
         case installHooksSuccess
         case setupApplyingPermissions
         case setupFailed
+        case setupFailureGuideTitle
+        case setupFailureGuideMessage
+        case openAppManagementSettings
         case hookTrustGuideTitle
         case hookTrustGuideMessage
         case openCodexAndCopyHooksCommand
