@@ -65,6 +65,20 @@ Do Not Sleep.app/Contents/MacOS/DoNotSleep
 
 `Scripts/build-app.sh` builds the release executable, copies localization resources, copies menu bar assets, and includes the helper install/uninstall scripts in the app bundle resources.
 
+## First-Time Setup After Install
+
+After installing the app, run this setup once:
+
+1. Open `Do Not Sleep.app`.
+2. Click the crescent icon in the menu bar and choose `Apply/refresh administrator permission`.
+3. Enter your macOS administrator password. While setup is running, the menu bar icon shows a spinner.
+4. If macOS says the app was blocked from modifying apps, open `System Settings > Privacy & Security > App Management`, allow Do Not Sleep, then run `Apply/refresh administrator permission` again.
+5. When the Codex hook trust guide appears, click `Open Codex`.
+6. In Codex, open `/hooks` and trust the `Do Not Sleep 훅 등록 세션 동기화` command hook.
+7. After that, Codex work automatically enables keep-awake, and the last completed session automatically releases it.
+
+This setup installs the privileged helper and registers Codex/Claude Code hooks. Python and separate Terminal commands are not required.
+
 ## Menu Bar App
 
 The status item is an icon, not text. It uses a macOS template crescent glyph so the system handles light and dark menu bar contrast, with a small colored status dot over it.
