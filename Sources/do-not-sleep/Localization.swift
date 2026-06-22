@@ -98,6 +98,8 @@ enum L10n {
         case hookSessionRemoveFailed
         case clearHookSessionsFailed
         case installHelperSuccess
+        case installHooksSuccess
+        case installHooksFailed
         case uninstallHelperSuccess
         case refreshFailed
         case appleScriptCreateFailed

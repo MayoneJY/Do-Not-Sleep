@@ -96,6 +96,8 @@
 "hookSessionRemoveFailed" = "훅 세션 제거 실패: %@";
 "clearHookSessionsFailed" = "훅 세션 전체 정리 실패: %@";
 "installHelperSuccess" = "관리자 권한 적용/갱신을 완료했습니다.";
+"installHooksSuccess" = "Codex/Claude 훅 등록을 완료했습니다.";
+"installHooksFailed" = "Codex/Claude 훅 등록 실패: %@";
 "uninstallHelperSuccess" = "관리자 권한 제거를 완료했습니다.";
 "refreshFailed" = "상태 새로고침 실패: %@";
 "appleScriptCreateFailed" = "관리자 인증 AppleScript를 만들 수 없습니다.";

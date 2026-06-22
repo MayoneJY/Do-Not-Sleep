@@ -1,6 +1,6 @@
 .DS_Store
 /.build
-/Do Not Sleep.app/
+/Do Not Sleep*.app/
 /dist/
 /Scripts/release.local.sh
 /.release.local.env

@@ -170,7 +170,9 @@ final class MenuBarAppController: NSObject, NSApplicationDelegate {
     }
 
     @objc private func installOrUpdatePrivilegedHelper() {
-        runPrivilegedHelperScript(scriptName: "install-helper.sh", successMessage: L10n.text(.installHelperSuccess))
+        if runPrivilegedHelperScript(scriptName: "install-helper.sh", successMessage: L10n.text(.installHelperSuccess)) {
+            installAgentHooks()
+        }
     }
 
     @objc private func uninstallPrivilegedHelper() {
@@ -314,7 +316,20 @@ final class MenuBarAppController: NSObject, NSApplicationDelegate {
         statusItem.menu = menu
     }
 
-    private func runPrivilegedHelperScript(scriptName: String, successMessage: String) {
+    private func installAgentHooks() {
+        do {
+            for message in try AgentHookInstaller.installAll() {
+                logger.log(message)
+            }
+            logger.log(L10n.text(.installHooksSuccess))
+            refresh()
+        } catch {
+            recordError(L10n.format(.installHooksFailed, error.localizedDescription))
+        }
+    }
+
+    @discardableResult
+    private func runPrivilegedHelperScript(scriptName: String, successMessage: String) -> Bool {
         do {
             let scriptPath = try resolveHelperScriptPath(scriptName)
             let command = "/usr/bin/env DO_NOT_SLEEP_INSTALL_UID=\(getuid()) \(Self.shellQuoted(scriptPath))"
@@ -335,8 +350,10 @@ final class MenuBarAppController: NSObject, NSApplicationDelegate {
             }
             logger.log(successMessage)
             refresh()
+            return true
         } catch {
             recordError(L10n.format(.helperTaskFailed, error.localizedDescription))
+            return false
         }
     }
 

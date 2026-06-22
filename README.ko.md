@@ -34,7 +34,6 @@ Do Not Sleep은 Codex 같은 코딩 에이전트가 작업 중일 때 Mac이 잠
 - 생성된 `.app` 번들 실행 기준 macOS 13 이상
 - Swift 6.2 또는 호환 가능한 Swift Package Manager toolchain
 - 훅 전달용 `curl`
-- `Scripts/install-hooks.py` 실행용 `python3`
 
 프로젝트 전용 환경 변수는 필요하지 않습니다. 앱 표시 문자열과 내부 명령 출력은 SwiftPM 리소스로 다국어 처리되어 있습니다. 현재 포함된 언어는 영어와 한국어입니다. 언어를 강제로 바꾸려면 `DO_NOT_SLEEP_LANG=<language-code>`를 사용할 수 있습니다.
 
@@ -115,13 +114,9 @@ Do Not Sleep.app/Contents/MacOS/DoNotSleep
 http://127.0.0.1:17643/event
 ```
 
-Codex와 Claude Code 훅 설치:
+처음 설정할 때는 메뉴의 `관리자 권한 적용/갱신`을 사용하세요. helper 적용이 끝나면 앱이 Codex와 Claude Code 훅도 직접 등록합니다. Python은 필요하지 않습니다.
 
-```bash
-python3 Scripts/install-hooks.py
-```
-
-설치 스크립트가 수정하는 파일:
+앱이 수정하는 파일:
 
 - `~/.codex/hooks.json`
 - `~/.claude/settings.json`

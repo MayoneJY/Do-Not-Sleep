@@ -34,7 +34,6 @@ It uses normal IOKit power assertions for idle/display sleep, and an optional pr
 - macOS 13 or later for the generated `.app` bundle.
 - Swift Package Manager with Swift 6.2 or a compatible toolchain.
 - `curl` for hook delivery.
-- `python3` for `Scripts/install-hooks.py`.
 
 No project-specific environment variables are required. User-facing app strings and internal command output are localized with SwiftPM resources. Included languages are English and Korean. You can override language lookup with `DO_NOT_SLEEP_LANG=<language-code>`.
 
@@ -115,13 +114,9 @@ When the menu bar app is running, it listens locally at:
 http://127.0.0.1:17643/event
 ```
 
-Install Codex and Claude Code hooks:
+Use `Apply/refresh administrator permission` in the menu for first-time setup. After the helper is applied, the app also installs Codex and Claude Code hooks directly. Python is not required.
 
-```bash
-python3 Scripts/install-hooks.py
-```
-
-The installer updates:
+The app updates:
 
 - `~/.codex/hooks.json`
 - `~/.claude/settings.json`

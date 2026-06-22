@@ -96,6 +96,8 @@
 "hookSessionRemoveFailed" = "Failed to remove hook session: %@";
 "clearHookSessionsFailed" = "Failed to clear all hook sessions: %@";
 "installHelperSuccess" = "Applied/refreshed administrator permission.";
+"installHooksSuccess" = "Installed Codex/Claude hooks.";
+"installHooksFailed" = "Failed to install Codex/Claude hooks: %@";
 "uninstallHelperSuccess" = "Removed administrator permission.";
 "refreshFailed" = "Failed to refresh status: %@";
 "appleScriptCreateFailed" = "Could not create the administrator authentication AppleScript.";
