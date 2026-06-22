@@ -21,6 +21,7 @@ final class MenuBarAppController: NSObject, NSApplicationDelegate, @unchecked Se
     private var lastErrorMessage: String?
     private var statusGlyphImage: NSImage?
     private var statusDotView: MenuBarStatusDotView?
+    private var setupProgressIndicator: MenuBarSetupProgressView?
     private var setupStatusMessage: String?
 
     private enum SetupWorkflowResult: Sendable {
@@ -398,11 +399,10 @@ final class MenuBarAppController: NSObject, NSApplicationDelegate, @unchecked Se
         let alert = NSAlert()
         alert.messageText = L10n.text(.hookTrustGuideTitle)
         alert.informativeText = L10n.text(.hookTrustGuideMessage)
-        alert.addButton(withTitle: L10n.text(.openCodexAndCopyHooksCommand))
+        alert.addButton(withTitle: L10n.text(.openCodex))
         alert.addButton(withTitle: L10n.text(.ok))
 
         if alert.runModal() == .alertFirstButtonReturn {
-            copyHooksCommandToPasteboard()
             openCodexApp()
         }
     }
@@ -421,12 +421,6 @@ final class MenuBarAppController: NSObject, NSApplicationDelegate, @unchecked Se
                 return
             }
         }
-    }
-
-    private func copyHooksCommandToPasteboard() {
-        let pasteboard = NSPasteboard.general
-        pasteboard.clearContents()
-        pasteboard.setString("/hooks", forType: .string)
     }
 
     private func openCodexApp() {
@@ -538,10 +532,17 @@ final class MenuBarAppController: NSObject, NSApplicationDelegate, @unchecked Se
 
         let dot = statusDot(active: active, helperStatus: helperStatus)
         button.title = ""
-        button.image = templateGlyphImage()
+        button.image = setupStatusMessage == nil ? templateGlyphImage() : nil
         button.imagePosition = .imageOnly
-        button.toolTip = statusToolTip(active: active, activeReason: activeReason)
-        updateStatusDot(dot, in: button)
+        button.toolTip = setupStatusMessage ?? statusToolTip(active: active, activeReason: activeReason)
+
+        if setupStatusMessage == nil {
+            stopSetupProgress()
+            updateStatusDot(dot, in: button)
+        } else {
+            statusDotView?.isHidden = true
+            updateSetupProgress(in: button)
+        }
     }
 
     private func statusDot(active: Bool, helperStatus: SleepHelperStatus) -> MenuBarStatusDot {
@@ -577,6 +578,7 @@ final class MenuBarAppController: NSObject, NSApplicationDelegate, @unchecked Se
     }
 
     private func updateStatusDot(_ dot: MenuBarStatusDot, in button: NSStatusBarButton) {
+        setupProgressIndicator?.isHidden = true
         let dotView = ensureStatusDotView(in: button)
         let dotSize: CGFloat = 5.5
         let padding: CGFloat = 2.5
@@ -584,6 +586,7 @@ final class MenuBarAppController: NSObject, NSApplicationDelegate, @unchecked Se
         let y = button.isFlipped ? padding : max(padding, button.bounds.height - dotSize - padding)
 
         dotView.frame = NSRect(x: x, y: y, width: dotSize, height: dotSize)
+        dotView.isHidden = false
         dotView.toolTip = dot.accessibilityDescription
         dotView.layer?.cornerRadius = dotSize / 2
         dotView.layer?.backgroundColor = dot.color.cgColor
@@ -601,6 +604,39 @@ final class MenuBarAppController: NSObject, NSApplicationDelegate, @unchecked Se
         button.addSubview(dotView)
         statusDotView = dotView
         return dotView
+    }
+
+    private func updateSetupProgress(in button: NSStatusBarButton) {
+        let indicator = ensureSetupProgressIndicator(in: button)
+        let size: CGFloat = 13
+        let x = max(0, (button.bounds.width - size) / 2)
+        let y = max(0, (button.bounds.height - size) / 2)
+
+        indicator.frame = NSRect(x: x, y: y, width: size, height: size)
+        indicator.toolTip = setupStatusMessage
+        indicator.isHidden = false
+        indicator.startAnimation(nil)
+    }
+
+    private func ensureSetupProgressIndicator(in button: NSStatusBarButton) -> MenuBarSetupProgressView {
+        if let setupProgressIndicator, setupProgressIndicator.superview === button {
+            return setupProgressIndicator
+        }
+
+        setupProgressIndicator?.removeFromSuperview()
+        let indicator = MenuBarSetupProgressView(frame: .zero)
+        indicator.style = .spinning
+        indicator.controlSize = .small
+        indicator.isIndeterminate = true
+        indicator.isDisplayedWhenStopped = false
+        button.addSubview(indicator)
+        setupProgressIndicator = indicator
+        return indicator
+    }
+
+    private func stopSetupProgress() {
+        setupProgressIndicator?.stopAnimation(nil)
+        setupProgressIndicator?.isHidden = true
     }
 
     private func loadMenuBarImage(named name: String) -> NSImage? {

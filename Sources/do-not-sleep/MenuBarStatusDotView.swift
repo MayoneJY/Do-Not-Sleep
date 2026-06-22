@@ -6,3 +6,8 @@ final class MenuBarStatusDotView: NSView {
     }
 }
 
+final class MenuBarSetupProgressView: NSProgressIndicator {
+    override func hitTest(_ point: NSPoint) -> NSView? {
+        nil
+    }
+}

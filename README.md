@@ -123,7 +123,7 @@ The app updates:
 
 Existing files are backed up with a `.before-do-not-sleep-YYYYMMDDHHMMSS` suffix before changes are written.
 
-Codex requires manual trust for new command hooks. After installing hooks, the app shows a guide dialog. Codex currently does not expose a public URL that opens the hook screen directly, so the dialog's Codex button copies `/hooks` to the clipboard and opens Codex; paste or type `/hooks`, then trust the `Do Not Sleep 훅 등록 세션 동기화` command hook.
+Codex requires manual trust for new command hooks. After installing hooks, the app shows a guide dialog. Click `Open Codex`, open `/hooks` in Codex, then trust the `Do Not Sleep 훅 등록 세션 동기화` command hook.
 
 If macOS says “Do Not Sleep.app was blocked from modifying apps,” open `System Settings > Privacy & Security > App Management`, allow Do Not Sleep, then try again. The setup failure dialog includes an `Open App Management Settings` button for this.
 

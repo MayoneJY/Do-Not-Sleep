@@ -106,7 +106,7 @@ enum L10n {
         case openAppManagementSettings
         case hookTrustGuideTitle
         case hookTrustGuideMessage
-        case openCodexAndCopyHooksCommand
+        case openCodex
         case uninstallHelperSuccess
         case refreshFailed
         case appleScriptCreateFailed

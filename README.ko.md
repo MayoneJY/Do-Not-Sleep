@@ -123,7 +123,7 @@ http://127.0.0.1:17643/event
 
 기존 파일은 쓰기 전에 `.before-do-not-sleep-YYYYMMDDHHMMSS` 접미사로 백업합니다.
 
-Codex는 새 command hook을 직접 신뢰 처리해야 실행합니다. 훅 설치 후 앱이 안내 창을 띄웁니다. Codex 앱은 현재 훅 화면으로 바로 이동하는 공개 URL을 제공하지 않으므로, 안내 창의 Codex 버튼은 `/hooks`를 클립보드에 복사하고 Codex 앱을 엽니다. Codex에서 `/hooks`를 붙여넣거나 입력한 뒤 `Do Not Sleep 훅 등록 세션 동기화` command hook을 신뢰 처리하세요.
+Codex는 새 command hook을 직접 신뢰 처리해야 실행합니다. 훅 설치 후 앱이 안내 창을 띄웁니다. `Codex 열기`를 누른 뒤 Codex에서 `/hooks`를 열고 `Do Not Sleep 훅 등록 세션 동기화` command hook을 신뢰 처리하세요.
 
 macOS가 “Do Not Sleep.app이 앱을 수정하려는 시도를 차단했습니다”라고 표시하면 `시스템 설정 > 개인정보 보호 및 보안 > 앱 관리`에서 Do Not Sleep을 허용한 뒤 다시 시도하세요. 앱의 실패 안내 창에서 `앱 관리 설정 열기`를 누르면 해당 설정으로 이동합니다.
 
