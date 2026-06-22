@@ -97,5 +97,9 @@ cat > "$CONTENTS_DIR/Info.plist" <<'PLIST'
 </plist>
 PLIST
 
+if command -v xattr >/dev/null 2>&1; then
+  xattr -cr "$APP_DIR"
+fi
+
 echo "앱 번들을 만들었습니다: $APP_DIR"
 echo "실행: open \"$APP_DIR\""
