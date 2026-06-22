@@ -74,7 +74,7 @@ cat > "$CONTENTS_DIR/Info.plist" <<'PLIST'
   <key>CFBundleExecutable</key>
   <string>DoNotSleep</string>
   <key>CFBundleIdentifier</key>
-  <string>local.do-not-sleep</string>
+  <string>com.mayonedev.do-not-sleep</string>
   <key>CFBundleIconFile</key>
   <string>DoNotSleep</string>
   <key>CFBundleInfoDictionaryVersion</key>
