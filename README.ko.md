@@ -114,7 +114,7 @@ Do Not Sleep.app/Contents/MacOS/DoNotSleep
 http://127.0.0.1:17643/event
 ```
 
-처음 설정할 때는 메뉴의 `관리자 권한 적용/갱신`을 사용하세요. helper 적용이 끝나면 앱이 Codex와 Claude Code 훅도 직접 등록합니다. Python은 필요하지 않습니다.
+처음 설정할 때는 메뉴의 `관리자 권한 적용/갱신`을 사용하세요. macOS 관리자 인증과 훅 설치가 진행되는 동안 메뉴에는 설정 진행 중 상태가 표시됩니다. helper 적용이 끝나면 앱이 Codex와 Claude Code 훅도 직접 등록합니다. Python은 필요하지 않습니다.
 
 앱이 수정하는 파일:
 
@@ -123,7 +123,7 @@ http://127.0.0.1:17643/event
 
 기존 파일은 쓰기 전에 `.before-do-not-sleep-YYYYMMDDHHMMSS` 접미사로 백업합니다.
 
-Codex는 command hook 신뢰 처리가 필요할 수 있습니다. 훅 설치 후 Codex에서 `/hooks`를 열고 `Do Not Sleep 훅 등록 세션 동기화` command hook을 신뢰 처리하세요.
+Codex는 새 command hook을 직접 신뢰 처리해야 실행합니다. 훅 설치 후 앱이 안내 창을 띄웁니다. 안내 창의 Codex 버튼은 `/hooks`를 클립보드에 복사하고 Codex 앱을 엽니다. Codex에서 `/hooks`를 붙여넣거나 입력한 뒤 `Do Not Sleep 훅 등록 세션 동기화` command hook을 신뢰 처리하세요.
 
 처리하는 이벤트:
 

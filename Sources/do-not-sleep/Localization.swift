@@ -99,7 +99,11 @@ enum L10n {
         case clearHookSessionsFailed
         case installHelperSuccess
         case installHooksSuccess
-        case installHooksFailed
+        case setupApplyingPermissions
+        case setupFailed
+        case hookTrustGuideTitle
+        case hookTrustGuideMessage
+        case openCodexAndCopyHooksCommand
         case uninstallHelperSuccess
         case refreshFailed
         case appleScriptCreateFailed

@@ -114,7 +114,7 @@ When the menu bar app is running, it listens locally at:
 http://127.0.0.1:17643/event
 ```
 
-Use `Apply/refresh administrator permission` in the menu for first-time setup. After the helper is applied, the app also installs Codex and Claude Code hooks directly. Python is not required.
+Use `Apply/refresh administrator permission` in the menu for first-time setup. The menu shows a setup-in-progress state while macOS administrator authentication and hook installation are running. After the helper is applied, the app also installs Codex and Claude Code hooks directly. Python is not required.
 
 The app updates:
 
@@ -123,7 +123,7 @@ The app updates:
 
 Existing files are backed up with a `.before-do-not-sleep-YYYYMMDDHHMMSS` suffix before changes are written.
 
-Codex may require manual trust for command hooks. After installing hooks, open `/hooks` in Codex and trust the `Do Not Sleep 훅 등록 세션 동기화` command hook.
+Codex requires manual trust for new command hooks. After installing hooks, the app shows a guide dialog. Its Codex button copies `/hooks` to the clipboard and opens Codex; paste or type `/hooks`, then trust the `Do Not Sleep 훅 등록 세션 동기화` command hook.
 
 Handled events:
 

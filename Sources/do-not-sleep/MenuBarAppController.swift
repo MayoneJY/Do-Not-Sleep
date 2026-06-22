@@ -3,7 +3,7 @@ import AppKit
 import Darwin
 
 @MainActor
-final class MenuBarAppController: NSObject, NSApplicationDelegate {
+final class MenuBarAppController: NSObject, NSApplicationDelegate, @unchecked Sendable {
     private let paths: AppPaths
     private let menuLock: FileLock
     private let store: StateStore
@@ -21,6 +21,12 @@ final class MenuBarAppController: NSObject, NSApplicationDelegate {
     private var lastErrorMessage: String?
     private var statusGlyphImage: NSImage?
     private var statusDotView: MenuBarStatusDotView?
+    private var setupStatusMessage: String?
+
+    private enum SetupWorkflowResult: Sendable {
+        case success(helperOutput: String, hookMessages: [String])
+        case failure(message: String)
+    }
 
     private enum MenuBarStatusDot {
         case active
@@ -170,8 +176,50 @@ final class MenuBarAppController: NSObject, NSApplicationDelegate {
     }
 
     @objc private func installOrUpdatePrivilegedHelper() {
-        if runPrivilegedHelperScript(scriptName: "install-helper.sh", successMessage: L10n.text(.installHelperSuccess)) {
-            installAgentHooks()
+        guard setupStatusMessage == nil else {
+            return
+        }
+
+        do {
+            let scriptPath = try resolveHelperScriptPath("install-helper.sh")
+            let installUID = getuid()
+            beginSetup(message: L10n.text(.setupApplyingPermissions))
+
+            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                let result: SetupWorkflowResult
+                do {
+                    let helperOutput = try Self.executePrivilegedHelperScript(scriptPath: scriptPath, installUID: installUID)
+                    let hookMessages = try AgentHookInstaller.installAll()
+                    result = .success(helperOutput: helperOutput, hookMessages: hookMessages)
+                } catch {
+                    result = .failure(message: error.localizedDescription)
+                }
+
+                DispatchQueue.main.async {
+                    guard let self else { return }
+                    self.handleSetupWorkflowResult(result)
+                }
+            }
+        } catch {
+            recordError(L10n.format(.setupFailed, error.localizedDescription))
+        }
+    }
+
+    private func handleSetupWorkflowResult(_ result: SetupWorkflowResult) {
+        switch result {
+        case let .success(helperOutput, hookMessages):
+            if !helperOutput.isEmpty {
+                logger.log("install-helper.sh 출력: \(helperOutput)")
+            }
+            logger.log(L10n.text(.installHelperSuccess))
+            for message in hookMessages {
+                logger.log(message)
+            }
+            logger.log(L10n.text(.installHooksSuccess))
+            finishSetup()
+            showHookTrustGuide()
+        case let .failure(message):
+            finishSetup(errorMessage: L10n.format(.setupFailed, message))
         }
     }
 
@@ -280,11 +328,12 @@ final class MenuBarAppController: NSObject, NSApplicationDelegate {
         menu.addItem(NSMenuItem.separator())
 
         let installHelperItem = NSMenuItem(
-            title: L10n.text(.installHelper),
-            action: #selector(installOrUpdatePrivilegedHelper),
+            title: setupStatusMessage ?? L10n.text(.installHelper),
+            action: setupStatusMessage == nil ? #selector(installOrUpdatePrivilegedHelper) : nil,
             keyEquivalent: ""
         )
         installHelperItem.target = self
+        installHelperItem.isEnabled = setupStatusMessage == nil
         menu.addItem(installHelperItem)
 
         if helperStatus.isAvailable {
@@ -296,6 +345,7 @@ final class MenuBarAppController: NSObject, NSApplicationDelegate {
                 keyEquivalent: ""
             )
             uninstallHelperItem.target = self
+            uninstallHelperItem.isEnabled = setupStatusMessage == nil
             menu.addItem(uninstallHelperItem)
         }
 
@@ -316,15 +366,44 @@ final class MenuBarAppController: NSObject, NSApplicationDelegate {
         statusItem.menu = menu
     }
 
-    private func installAgentHooks() {
-        do {
-            for message in try AgentHookInstaller.installAll() {
-                logger.log(message)
-            }
-            logger.log(L10n.text(.installHooksSuccess))
+    private func beginSetup(message: String) {
+        setupStatusMessage = message
+        lastErrorMessage = nil
+        rebuildMenu()
+    }
+
+    private func finishSetup(errorMessage: String? = nil) {
+        setupStatusMessage = nil
+        if let errorMessage {
+            recordError(errorMessage)
+        } else {
             refresh()
-        } catch {
-            recordError(L10n.format(.installHooksFailed, error.localizedDescription))
+        }
+    }
+
+    private func showHookTrustGuide() {
+        let alert = NSAlert()
+        alert.messageText = L10n.text(.hookTrustGuideTitle)
+        alert.informativeText = L10n.text(.hookTrustGuideMessage)
+        alert.addButton(withTitle: L10n.text(.openCodexAndCopyHooksCommand))
+        alert.addButton(withTitle: L10n.text(.ok))
+
+        if alert.runModal() == .alertFirstButtonReturn {
+            copyHooksCommandToPasteboard()
+            openCodexApp()
+        }
+    }
+
+    private func copyHooksCommandToPasteboard() {
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString("/hooks", forType: .string)
+    }
+
+    private func openCodexApp() {
+        let appURL = URL(fileURLWithPath: "/Applications/Codex.app")
+        if FileManager.default.fileExists(atPath: appURL.path) {
+            NSWorkspace.shared.open(appURL)
         }
     }
 
@@ -332,19 +411,7 @@ final class MenuBarAppController: NSObject, NSApplicationDelegate {
     private func runPrivilegedHelperScript(scriptName: String, successMessage: String) -> Bool {
         do {
             let scriptPath = try resolveHelperScriptPath(scriptName)
-            let command = "/usr/bin/env DO_NOT_SLEEP_INSTALL_UID=\(getuid()) \(Self.shellQuoted(scriptPath))"
-            let source = #"do shell script "\#(Self.appleScriptEscaped(command))" with administrator privileges"#
-            guard let script = NSAppleScript(source: source) else {
-                throw AppError(L10n.text(.appleScriptCreateFailed))
-            }
-
-            var errorInfo: NSDictionary?
-            let output = script.executeAndReturnError(&errorInfo)
-            if let errorInfo {
-                throw AppError(Self.appleScriptErrorMessage(errorInfo))
-            }
-
-            let scriptOutput = output.stringValue?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            let scriptOutput = try Self.executePrivilegedHelperScript(scriptPath: scriptPath, installUID: getuid())
             if !scriptOutput.isEmpty {
                 logger.log("\(scriptName) 출력: \(scriptOutput)")
             }
@@ -388,17 +455,33 @@ final class MenuBarAppController: NSObject, NSApplicationDelegate {
         throw AppError(L10n.format(.helperScriptMissing, scriptName))
     }
 
-    private static func shellQuoted(_ value: String) -> String {
+    nonisolated private static func executePrivilegedHelperScript(scriptPath: String, installUID: uid_t) throws -> String {
+        let command = "/usr/bin/env DO_NOT_SLEEP_INSTALL_UID=\(installUID) \(Self.shellQuoted(scriptPath))"
+        let source = #"do shell script "\#(Self.appleScriptEscaped(command))" with administrator privileges"#
+        guard let script = NSAppleScript(source: source) else {
+            throw AppError(L10n.text(.appleScriptCreateFailed))
+        }
+
+        var errorInfo: NSDictionary?
+        let output = script.executeAndReturnError(&errorInfo)
+        if let errorInfo {
+            throw AppError(Self.appleScriptErrorMessage(errorInfo))
+        }
+
+        return output.stringValue?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+    }
+
+    nonisolated private static func shellQuoted(_ value: String) -> String {
         "'\(value.replacingOccurrences(of: "'", with: "'\\''"))'"
     }
 
-    private static func appleScriptEscaped(_ value: String) -> String {
+    nonisolated private static func appleScriptEscaped(_ value: String) -> String {
         value
             .replacingOccurrences(of: "\\", with: "\\\\")
             .replacingOccurrences(of: "\"", with: "\\\"")
     }
 
-    private static func appleScriptErrorMessage(_ errorInfo: NSDictionary) -> String {
+    nonisolated private static func appleScriptErrorMessage(_ errorInfo: NSDictionary) -> String {
         let message = (errorInfo["NSAppleScriptErrorMessage"] as? String)?
             .trimmingCharacters(in: .whitespacesAndNewlines)
         let number = errorInfo["NSAppleScriptErrorNumber"].map { "\($0)" }

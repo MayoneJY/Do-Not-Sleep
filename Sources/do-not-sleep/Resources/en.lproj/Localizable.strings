@@ -97,7 +97,11 @@
 "clearHookSessionsFailed" = "Failed to clear all hook sessions: %@";
 "installHelperSuccess" = "Applied/refreshed administrator permission.";
 "installHooksSuccess" = "Installed Codex/Claude hooks.";
-"installHooksFailed" = "Failed to install Codex/Claude hooks: %@";
+"setupApplyingPermissions" = "Setting up... applying administrator permission and hooks";
+"setupFailed" = "Initial setup failed: %@";
+"hookTrustGuideTitle" = "Codex hook trust is required";
+"hookTrustGuideMessage" = "Codex requires explicit trust before a new command hook can run. Open /hooks in Codex and trust the 'Do Not Sleep 훅 등록 세션 동기화' command hook. This button copies /hooks to the clipboard and opens Codex.";
+"openCodexAndCopyHooksCommand" = "Open Codex and Copy /hooks";
 "uninstallHelperSuccess" = "Removed administrator permission.";
 "refreshFailed" = "Failed to refresh status: %@";
 "appleScriptCreateFailed" = "Could not create the administrator authentication AppleScript.";
