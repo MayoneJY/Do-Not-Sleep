@@ -1,4 +1,6 @@
-![Do Not Sleep hero](Assets/readme-hero.png)
+<p align="center">
+  <img src="Assets/readme-hero.png" alt="Do Not Sleep 메뉴 막대 앱" width="720">
+</p>
 
 # Do Not Sleep
 
@@ -15,19 +17,23 @@
 
 Do Not Sleep은 Codex 같은 코딩 에이전트가 작업 중일 때 Mac이 잠자기로 들어가지 않도록 유지하는 macOS 메뉴 막대 앱입니다.
 
-일반 유휴/디스플레이 잠자기 방지는 IOKit power assertion으로 처리합니다. 덮개를 닫은 상태에서도 버티려면 macOS 전역 설정인 `pmset disablesleep`이 필요하기 때문에, 이 경우에는 별도의 관리자 권한 helper를 사용합니다. 현재 구현과 검증은 Codex 워크플로우를 중심으로 맞춰져 있습니다. Claude Code 훅도 같은 로컬 훅 수신 경로로 설치되지만, 실제 장시간 사용 검증은 더 필요합니다.
+**다운로드:** [최신 릴리즈](https://github.com/MayoneJY/Do-Not-Sleep/releases/latest)
 
-## 기능
+## 빠른 설치
 
-- 가벼운 macOS 메뉴 막대 앱으로 실행됩니다.
-- 로컬 훅 수신 주소 `http://127.0.0.1:17643/event`를 엽니다.
-- 수동 유지가 켜져 있거나 훅 세션이 남아 있으면 잠자기 방지를 유지합니다.
-- 여러 훅 세션을 따로 추적해서 한 세션의 완료 이벤트가 다른 활성 세션을 풀지 않게 합니다.
-- Codex와 Claude Code 훅을 설치해 세션 이벤트를 로컬 수신기로 보냅니다.
-- 기록된 transcript 파일이 10분 동안 바뀌지 않으면 오래된 훅 세션을 자동 정리합니다.
-- 관리자 권한이 적용되어 있으면 root LaunchDaemon helper를 통해 덮개 닫힘 강제 방지를 적용합니다.
-- 활성 조건이 사라지면 assertion과 `pmset disablesleep`을 즉시 해제합니다.
-- 마지막 세션이 끝났을 때 이미 덮개가 닫혀 있으면 helper에 `pmset sleepnow` 실행을 요청합니다.
+1. [최신 릴리즈](https://github.com/MayoneJY/Do-Not-Sleep/releases/latest)에서 `Do.Not.Sleep-*.zip`을 내려받아 압축을 풀고 `Do Not Sleep.app`을 엽니다.
+2. 메뉴 막대의 초승달 아이콘을 눌러 `관리자 권한 적용/갱신`을 선택합니다.
+3. Codex 훅 신뢰 안내가 뜨면 Codex에서 `/hooks`를 열고 `Do Not Sleep 훅 등록 세션 동기화`를 신뢰 처리합니다.
+
+설정이 끝나면 Codex 작업이 시작될 때 자동으로 잠자기 방지가 켜지고, 마지막 세션이 끝나면 자동으로 해제됩니다.
+
+## 왜 쓰나요
+
+- Codex 세션이 활성 중일 때 Mac 잠자기를 방지합니다.
+- 여러 에이전트 세션을 독립적으로 추적합니다.
+- 관리자 권한 helper로 덮개 닫힘 상태의 잠자기 방지도 지원합니다.
+- 작업이 끝나면 잠자기 방지를 자동으로 해제합니다.
+- Python 없이 작은 macOS 메뉴 막대 앱으로 동작합니다.
 
 ## 요구사항
 

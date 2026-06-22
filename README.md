@@ -1,4 +1,6 @@
-![Do Not Sleep hero](Assets/readme-hero.png)
+<p align="center">
+  <img src="Assets/readme-hero.png" alt="Do Not Sleep menu bar app" width="720">
+</p>
 
 # Do Not Sleep
 
@@ -13,21 +15,25 @@
 
 [한국어 README](README.ko.md)
 
-Do Not Sleep is a macOS menu bar app that keeps a Mac awake while coding agents such as Codex are working.
+Do Not Sleep is a macOS menu bar app that keeps your Mac awake while Codex and other coding agents are working.
 
-It uses normal IOKit power assertions for idle/display sleep, and an optional privileged helper for the global macOS `pmset disablesleep` setting needed for lid-closed keep-awake. The project is currently optimized and tested around Codex workflows. Claude Code hooks are installed through the same local hook receiver path, but still need broader real-world verification.
+**Download:** [Latest release](https://github.com/MayoneJY/Do-Not-Sleep/releases/latest)
 
-## What It Does
+## Quick Install
 
-- Runs as a lightweight macOS menu bar app.
-- Listens for local agent hook events at `http://127.0.0.1:17643/event`.
-- Keeps sleep assertions active while manual keep-awake is on or hook sessions exist.
-- Tracks concurrent hook sessions separately so one completion event does not release another active session.
-- Installs Codex and Claude Code hooks that POST events to the local receiver.
-- Automatically cleans up stale hook sessions when the recorded transcript file has not changed for 10 minutes.
-- Applies lid-closed forced keep-awake by using a small root LaunchDaemon helper when administrator permission has been applied.
-- Releases assertions and `pmset disablesleep` immediately when no active condition remains.
-- If the lid is already closed when the last session ends, asks the helper to run `pmset sleepnow`.
+1. Download `Do.Not.Sleep-*.zip` from the [latest release](https://github.com/MayoneJY/Do-Not-Sleep/releases/latest), unzip it, and open `Do Not Sleep.app`.
+2. Click the crescent icon in the menu bar and choose `Apply/refresh administrator permission`.
+3. When Codex asks for hook trust, open `/hooks` in Codex and trust `Do Not Sleep 훅 등록 세션 동기화`.
+
+After setup, Codex work automatically enables keep-awake, and the last completed session automatically releases it.
+
+## Why Use It
+
+- Keeps your Mac awake while Codex sessions are active.
+- Tracks multiple concurrent agent sessions independently.
+- Supports lid-closed keep-awake with a signed privileged helper.
+- Releases sleep prevention automatically when work is done.
+- Runs as a small macOS menu bar app, with no Python dependency.
 
 ## Requirements
 
