@@ -1,6 +1,4 @@
-<p align="center">
-  <img src="Assets/readme-hero.png" alt="Do Not Sleep menu bar app" width="720">
-</p>
+![Do Not Sleep hero](Assets/readme-hero.jpg)
 
 # Do Not Sleep
 
